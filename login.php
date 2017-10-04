@@ -49,13 +49,9 @@
 <div class="container">
     <div class="row">
         <h1 class="page-header">
-            Signup
+            Login
         </h1>
         <form>
-            <div class="form-group">
-                <label for="recipient-name" class="control-label">Full Name:</label>
-                <input type="text" class="form-control" id="recipient-name">
-            </div>
 
             <div class="form-group">
                 <label for="recipient-name" class="control-label">username :</label>
@@ -67,15 +63,19 @@
                 <input type="password" class="form-control" id="recipient-name">
             </div>
 
-            <div class="form-group">
-                <label for="recipient-name" class="control-label">confirm password:</label>
-                <input type="password" class="form-control" id="recipient-name">
-            </div>
-
-                <button type="button" class="form-control" >Signup </button>
+                <button type="button" class="form-control" >login </button>
         </form>
 
+
     </div>
+    <div class="container">
+        <div class="row">
+            <footer>
+                <p>&copy; 2016 Company, Inc.</p>
+            </footer>
+        </div>
+    </div>
+
 
 </div> <!-- /container -->
 
