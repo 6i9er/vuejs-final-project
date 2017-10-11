@@ -33,9 +33,17 @@ export default {
     },
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      msg: 'Welcome to Your Vue.js App',
+        login : {
+            email : '',
+            password : '',
+        },
+        user : '',
     }
-  }
+  },
+    methods : {
+
+    }
 }
 </script>
 
