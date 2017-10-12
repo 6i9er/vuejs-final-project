@@ -15,7 +15,7 @@
                     <label for="loginPassword" class="control-label">password:</label>
                     <input type="password" class="form-control" v-model="newUser.password" v-on:blur="validatePassword()" v-on:keypress="validatePassword()"  ref="loginPassword" id="loginPassword">
                 </div>
-
+                <div  id="loginErrorMessage"></div>
                 <button type="button" v-if="canLogin" class="form-control" v-on:click="login()" >login </button>
             </form>
 <!--<h1> email : {{ user }} <br> Password </h1>-->
@@ -27,7 +27,10 @@
 
 <script>
 
+    import changeMenu from '../Mixins/changeMenu';
 export default{
+
+
     components : {
 
     },
@@ -78,15 +81,50 @@ export default{
             var tagName = document.getElementById(id);
             tagName.setAttribute("style" , 'border:1px solid red;background:pink;')
         },
+        login : function () {
+            if(this.canLogin == true){
+                this.$http.post('http://127.0.0.1:8000/api/members/login',{
+                    email:this.newUser.email,
+                    password:this.newUser.password,
+
+                }).then(function(response){
+                    if(response['body']['status'] == '200'){
+                        this.$session.start()
+                        this.$session.set('member_id', response['body']['data']['id'])
+                        this.resetData();
+                        this.changeMenu();
+                        this.$router.push('/');
+                    }else{
+                        this.setErrorClass("loginEmail");
+                        this.setErrorClass("loginPassword");
+                        document.getElementById("loginErrorMessage").innerText = response['body']['data'];
+                       var el = document.getElementById("loginErrorMessage")
+                           el.className -= 'hidden';
+                           el.className += 'help-block alert alert-danger';
+                    }
+                }).catch( function(error) {
+                    console.log(error);
+
+                } );
+            }
+        },
+        resetData : function () {
+            this.removeErrorClass("loginEmail");
+            this.removeErrorClass("loginPassword");
+            document.getElementById("loginEmail").value = '';
+            document.getElementById("loginPassword").value = '';
+            var elError = document.getElementById("loginErrorMessage")
+            elError.className += 'hidden';
+            elError.innerText  = '';
+        },
     },
     created () {
-//    console.log("aaaaaA");
-//        this.$http.get('http://127.0.0.1:8000/api/articles',{
-//
-//        }).then(function(response){
-//            console.log(response['body']);
-//        })
-    }
+
+       if(this.$session.has('member_id')){
+            this.$router.push('/');
+       }
+    },
+    mixins : [changeMenu],
 }
 
 function checkEmail(email) {

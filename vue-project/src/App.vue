@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <app-header></app-header>
+    <app-header ></app-header>
     <router-view></router-view>
     <!--<app-signup></app-signup>-->
     <!--<app-create-single-article></app-create-single-article>-->
@@ -39,6 +39,7 @@ export default {
             password : '',
         },
         user : '',
+
     }
   },
     methods : {
