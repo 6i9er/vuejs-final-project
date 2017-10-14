@@ -5,7 +5,6 @@
                 Login
             </h1>
             <form>
-
                 <div class="form-group">
                     <label for="loginEmail" class="control-label">email :</label>
                     <input type="text"  class="form-control"   v-model="newUser.email" v-on:blur="validateEmail()" ref="loginEmail" id="loginEmail">
@@ -18,21 +17,16 @@
                 <div  id="loginErrorMessage"></div>
                 <button type="button" v-if="canLogin" class="form-control" v-on:click="login()" >login </button>
             </form>
-<!--<h1> email : {{ user }} <br> Password </h1>-->
-
         </div>
     </div>
 
 </template>
 
 <script>
-
     import changeMenu from '../Mixins/changeMenu';
+    import validation from '../Mixins/validation';
 export default{
-
-
     components : {
-
     },
     data:function() {
         return {
@@ -47,7 +41,7 @@ export default{
     },
     methods : {
         validateEmail : function() {
-            if(checkEmail(this.$refs.loginEmail.value) == true){
+            if(this.checkEmail(this.$refs.loginEmail.value) == true){
                 this.validEmail = true;
                 this.removeErrorClass("loginEmail");
             }else{
@@ -73,63 +67,32 @@ export default{
                 this.canLogin =  false;
             }
         },
-        removeErrorClass : function (id ) {
-            var tagName = document.getElementById(id);
-            tagName.setAttribute("style" , '')
-        },
-        setErrorClass : function (id ) {
-            var tagName = document.getElementById(id);
-            tagName.setAttribute("style" , 'border:1px solid red;background:pink;')
-        },
         login : function () {
             if(this.canLogin == true){
                 this.$http.post('http://127.0.0.1:8000/api/members/login',{
                     email:this.newUser.email,
                     password:this.newUser.password,
-
                 }).then(function(response){
                     if(response['body']['status'] == '200'){
                         this.$session.start()
                         this.$session.set('member_id', response['body']['data']['id'])
-                        this.resetData();
+                        this.resetData(["loginEmail" , "loginPassword"] , 'loginErrorMessage' , true);
                         this.changeMenu();
-                        this.$router.push('/');
+                                            this.$router.push('/');
                     }else{
-                        this.setErrorClass("loginEmail");
-                        this.setErrorClass("loginPassword");
-                        document.getElementById("loginErrorMessage").innerText = response['body']['data'];
-                       var el = document.getElementById("loginErrorMessage")
-                           el.className -= 'hidden';
-                           el.className += 'help-block alert alert-danger';
+                        this.hasError(["loginEmail" , "loginPassword"] , 'loginErrorMessage' , true , response['body']['data']);
                     }
                 }).catch( function(error) {
                     console.log(error);
-
                 } );
             }
         },
-        resetData : function () {
-            this.removeErrorClass("loginEmail");
-            this.removeErrorClass("loginPassword");
-            document.getElementById("loginEmail").value = '';
-            document.getElementById("loginPassword").value = '';
-            var elError = document.getElementById("loginErrorMessage")
-            elError.className += 'hidden';
-            elError.innerText  = '';
-        },
     },
     created () {
-
        if(this.$session.has('member_id')){
             this.$router.push('/');
        }
     },
-    mixins : [changeMenu],
+    mixins : [changeMenu , validation],
 }
-
-function checkEmail(email) {
-    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return re.test(email);
-}
-
 </script>

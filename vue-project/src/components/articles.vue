@@ -18,42 +18,31 @@
 
             </div>
             <div class="row">
+
+
                 <!-- Example row of columns -->
-                    <div class="col-md-4">
-                        <h2>Heading</h2>
-                        <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                        <p><router-link class="btn btn-default" to="/show/2" exact=""> View details </router-link></p>
+                    <div v-for="article in articles" class="col-md-4">
+                        <h2>{{ article.title }} ( {{ article.id  }} )</h2>
+                        <p> {{ article.content | snipets }} </p>
+                        <button  class="btn btn-default" v-on:click="viewArticle( article.id )"> View details </button><hr>
+
                     </div>
                 <!-- End Example row of columns -->
 
-                <!-- Example row of columns -->
-                <div class="col-md-4">
-                    <h2>Heading</h2>
-                    <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                    <p><router-link class="btn btn-default" to="/show/1" exact=""> View details </router-link></p>
-                </div>
-                <!-- End Example row of columns -->
+            </div>
+            <div class="row">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination">
+                        <li v-for="page in totalPages"><a href="javascript:void(0)" v-on:click="getNewData(page)" >{{ page}}</a></li>
+                    </ul>
+                </nav>
 
-                <!-- Example row of columns -->
-                <div class="col-md-4">
-                    <h2>Heading</h2>
-                    <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                    <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-                </div>
-                <!-- End Example row of columns -->
-
-                <!-- Example row of columns -->
-                <div class="col-md-4">
-                    <h2>Heading</h2>
-                    <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                    <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-                </div>
-                <!-- End Example row of columns -->
             </div>
         </div>
     </div>
 
 </template>
+<script>
 
 export default{
     components : {
@@ -61,10 +50,47 @@ export default{
     },
     data:function() {
     return {
-
+        articles : [],
+        totalPages : 0,
+        pageNumber : 0,
+        count : 5,
+        start : 0
 
     }
     },
     methods : {
+        viewArticle : function (id) {
+            this.$router.push('/show/'+id)
+        },
+        getPrev : function (page) {
+            console.log()
+            if(page > 1){
+                getNewData(page)
+            }
+        },
+        getNewData : function (page ) {
+            this.$http.get('http://localhost:8000/api/get-articles?count='+this.count+'&start='+page, {
+            }).then(function (response){
+                this.totalPages = response['body']['data']['totalPages'];
+                this.articles = response['body']['data']['articles'];
+                console.log( response['body']['data']['totalPages']);
+                console.log( response['body']['data']['articles']);
+            })
+        }
+    },
+    created () {
+        this.$http.get('http://localhost:8000/api/get-articles?count='+this.count+'&start='+this.start , {
+        }).then(function (response){
+            this.totalPages = response['body']['data']['totalPages'];
+            this.articles = response['body']['data']['articles'];
+          console.log( response['body']['data']['totalPages']);
+          console.log( response['body']['data']['articles']);
+        })
+    },
+    filters : {
+        snipets(value){
+            return value.slice(0,50) + "...."
+        }
     }
 }
+</script>
