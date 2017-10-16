@@ -1,36 +1,30 @@
 <template>
     <div class="container">
         <!-- Example row of columns -->
-        <div class="row">
+        <div class="row" v-if="foundData">
             <div class="col-md-12">
-                <h2>Heading</h2>
+                <h2>{{ blog.title }}</h2>
                 <div class="row">
                     <div class="col-md-6">
-                        <b> Author : Mina Amir </b>
+                        <b> Author : {{ blog.author }} </b>
                     </div>
                     <div class="col-md-6">
-                        <b>  created on : 13-12-1989 </b>
+                        <b>  created on : {{ blog.date }} </b>
                     </div>
                 </div>
                 <p>
-                    Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.
-                    Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.
-                    Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.
-                    Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.
-                    Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.
-
+                    {{ blog.content }}
                 </p>
 
                 <ol class="breadcrumb">
-                    <li><a href="#">Wizards</a></li>
-                    <li><a href="#">Action</a></li>
-                    <li class="active">Comedy</li>
+                    <li v-for="category in categories"><a href="javascript:void(0)" v-on:click="searchCategory(category.id)">{{ category.name }}</a></li>
                 </ol>
-
-
-
             </div>
 
+        </div>
+
+        <div class="row" v-show="!foundData">
+            <div class="alert alert-danger text-center">{{ this.errorData }}</div>
         </div>
 
         <hr>
@@ -38,16 +32,40 @@
 
 </template>
 
+<script>
+
 export default{
     components : {
 
     },
     data:function() {
-    return {
-
-
-    }
+        return {
+            blog : [],
+            categories : [],
+            foundData : false,
+            errorData : 'no data found',
+        }
     },
     methods : {
+        searchCategory : function (categoryId) {
+            this.$router.push('/search/'+categoryId)
+        }
+    },
+    created () {
+        var post = this.$router.currentRoute.params.id;
+        this.$http.get('http://localhost:8000/api/articles/' + post , {
+        }).then(function (response){
+            if(response['body']['status'] == 200){
+                this.blog = response['body']['data']['article']
+                this.categories = response['body']['data']['article']['categories'];
+                this.foundData = true;
+            }else{
+                this.foundData = false;
+                this.errorData = response['body']['data']
+                this.blog = []
+                this.categories = [];
+            }
+        })
     }
 }
+</script>

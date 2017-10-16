@@ -1,44 +1,30 @@
 <template>
     <div class="container">
-        <!-- First Topic -->
-        <div class="jumbotron">
-            <div class="container">
-                <h1>Hello, world!</h1>
-                <p>This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
-                <p><router-link class="btn btn-primary btn-lg" to="/show" exact=""> View details </router-link></p>
-            </div>
-        </div>
-        <!-- End of First Topic -->
 
         <div class="container">
             <div class="row">
                     <div class="form-group">
-                        <input type="text" v-model="search" class="form-control" placeholder="Search for articles here">
+                        <input type="text" class="form-control" v-model="search" placeholder="Search for articles here">
                     </div>
 
             </div>
-            <div class="row">
-
-
+            <div class="row" v-if="foundData">
                 <!-- Example row of columns -->
-                    <div v-for="article in searchFilter" class="col-md-4">
                     <!--<div v-for="article in articles" class="col-md-4">-->
+                    <div v-for="article in searchFilter" class="col-md-4">
                         <h2>{{ article.title }} ( {{ article.id  }} )</h2>
                         <p> {{ article.content | snipets }} </p>
                         <button  class="btn btn-default" v-on:click="viewArticle( article.id )"> View details </button><hr>
 
                     </div>
                 <!-- End Example row of columns -->
-
             </div>
-            <div class="row">
-                <nav aria-label="Page navigation"  id="pagination">
-                    <ul class="pagination">
-                        <li v-for="page in totalPages"><a href="javascript:void(0)" v-on:click="getNewData(page)" >{{ page}}</a></li>
-                    </ul>
-                </nav>
-
+            <div class="row" v-show="!foundData">
+                <div class="alert alert-danger">
+                    {{ errorData }}
+                </div>
             </div>
+
         </div>
     </div>
 
@@ -47,29 +33,24 @@
 
     import searchFilter from '../Mixins/search';
 
-
-    export default{
+export default{
     components : {
 
     },
     data:function() {
-    return {
-        articles : [],
-        totalPages : 0,
-        pageNumber : 0,
-        count : 5,
-        start : 0,
-        search:'',
+        return {
+            articles : [],
+            foundData : false,
+            errorData : '',
+            search:'',
 
-    }
+        }
     },
     methods : {
         viewArticle : function (id) {
-            this.search = '';
             this.$router.push('/show/'+id)
         },
         getNewData : function (page ) {
-            this.search = '';
             var newPage = page-1;
             this.$http.get('http://localhost:8000/api/get-articles?count='+this.count+'&start='+newPage, {
             }).then(function (response){
@@ -79,10 +60,16 @@
         }
     },
     created () {
-        this.$http.get('http://localhost:8000/api/get-articles?count='+this.count+'&start=0' , {
+        var search = this.$router.currentRoute.params.id;
+        this.$http.get('http://localhost:8000/api/get-articles-by-search?id='+search , {
         }).then(function (response){
-            this.totalPages = response['body']['data']['totalPages'];
-            this.articles = response['body']['data']['articles'];
+            if(response['body']['status'] == 200){
+                this.articles = response['body']['data'];
+                this.foundData = true;
+            }else{
+                this.foundData = false;
+                this.errorData = response['body']['data'];
+            }
         })
     },
     filters : {
