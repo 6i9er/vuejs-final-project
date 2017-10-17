@@ -69,14 +69,17 @@ export default{
         },
         login : function () {
             if(this.canLogin == true){
-                this.$http.post('http://127.0.0.1:8000/api/members/login',{
+
+                this.$http.post('http://localhost/restApi/public/api/members/login',{
                     email:this.newUser.email,
                     password:this.newUser.password,
                 }).then(function(response){
                     if(response['body']['status'] == '200'){
+
                         this.$session.start()
-                        this.$session.set('member_id', response['body']['data']['id'])
-                        this.resetData(["loginEmail" , "loginPassword"] , 'loginErrorMessage' , true);
+                        localStorage.setItem("member_id", response['body']['data']['id']);
+//                        this.$session.set('member_id', response['body']['data']['id'])
+//                        this.resetData(["loginEmail" , "loginPassword"] , 'loginErrorMessage' , true);
                         this.changeMenu();
                                             this.$router.push('/');
                     }else{
@@ -89,9 +92,12 @@ export default{
         },
     },
     created () {
-       if(this.$session.has('member_id')){
+        if(localStorage.member_id){
             this.$router.push('/');
-       }
+        }
+//       if(this.$session.has('member_id')){
+//            this.$router.push('/');
+//       }
     },
     mixins : [changeMenu , validation],
 }
