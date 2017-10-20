@@ -34,7 +34,9 @@
 <script>
     import changeMenu from '../Mixins/changeMenu';
     import validation from '../Mixins/validation';
-export default{
+    import globalVariables from '../Mixins/globalVariables';
+
+    export default{
     components : {
 
     },
@@ -51,7 +53,8 @@ export default{
             validPassword : false,
             validConfirmPassword : false,
             validName : false,
-            }
+            publicPath : '',
+        }
     },
     methods : {
         validateEmail : function() {
@@ -105,7 +108,7 @@ export default{
             if(this.newUser.password == this.newUser.confirmPassword){
                 this.resetData(["signupPassword" , "signupConfirmPassword"] , 'signupErrorMessage' , true );
 
-                this.$http.post('http://127.0.0.1:8000/api/members',{
+                this.$http.post(this.publicPath + '/members',{
                     email:this.newUser.email,
                     password:this.newUser.password,
                     confirmPassword:this.newUser.password,
@@ -136,8 +139,15 @@ export default{
             }
         }
     },
-    
-    mixins : [changeMenu , validation],
+    created () {
+        //Set the public URL Path
+        this.publicPath = this.getPublicPath();
+        //Check if user login t will redirect to home page
+        if(localStorage.member_id){
+            this.$router.push('/');
+        }
+    },
+    mixins : [changeMenu , validation , globalVariables],
 }
 
 </script>

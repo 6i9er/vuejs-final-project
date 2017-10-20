@@ -3,7 +3,7 @@
         <!-- First Topic -->
         <div class="jumbotron">
             <div class="container">
-                <h1>Hello, world!</h1>
+                <h1>About Us</h1>
                 <p>This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
                 <p><router-link class="btn btn-primary btn-lg" to="/show" exact=""> View details </router-link></p>
             </div>
@@ -46,6 +46,8 @@
 <script>
 
     import searchFilter from '../Mixins/search';
+    import globalVariables from '../Mixins/globalVariables';
+    import changeMenu from '../Mixins/changeMenu';
 
 
     export default{
@@ -60,6 +62,7 @@
         count : 5,
         start : 0,
         search:'',
+        publicPath : '',
 
     }
     },
@@ -71,7 +74,7 @@
         getNewData : function (page ) {
             this.search = '';
             var newPage = page-1;
-            this.$http.get('http://localhost:8000/api/get-articles?count='+this.count+'&start='+newPage, {
+            this.$http.get(this.publicPath  + '/get-articles?count='+this.count+'&start='+newPage, {
             }).then(function (response){
                 this.totalPages = response['body']['data']['totalPages'];
                 this.articles = response['body']['data']['articles'];
@@ -79,7 +82,9 @@
         }
     },
     created () {
-        this.$http.get('http://localhost:8000/api/get-articles?count='+this.count+'&start=0' , {
+        //Set the public URL Path
+        this.publicPath = this.getPublicPath();
+        this.$http.get(this.publicPath  +'/get-articles?count='+this.count+'&start=0' , {
         }).then(function (response){
             this.totalPages = response['body']['data']['totalPages'];
             this.articles = response['body']['data']['articles'];
@@ -90,6 +95,6 @@
             return value.slice(0,50) + "...."
         }
     },
-    mixins : [ searchFilter ],
+    mixins : [ changeMenu ,searchFilter , globalVariables ],
 }
 </script>

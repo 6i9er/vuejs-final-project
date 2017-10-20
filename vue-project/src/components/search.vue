@@ -32,6 +32,7 @@
 <script>
 
     import searchFilter from '../Mixins/search';
+    import globalVariables from "../Mixins/globalVariables";
 
 export default{
     components : {
@@ -43,6 +44,7 @@ export default{
             foundData : false,
             errorData : '',
             search:'',
+            publicPath : '',
 
         }
     },
@@ -61,7 +63,9 @@ export default{
     },
     created () {
         var search = this.$router.currentRoute.params.id;
-        this.$http.get('http://localhost:8000/api/get-articles-by-search?id='+search , {
+        this.publicPath = this.getPublicPath();
+
+        this.$http.get(this.publicPath + '/get-articles-by-search?id='+search , {
         }).then(function (response){
             if(response['body']['status'] == 200){
                 this.articles = response['body']['data'];
@@ -77,6 +81,6 @@ export default{
             return value.slice(0,50) + "...."
         }
     },
-    mixins : [ searchFilter ],
+    mixins : [ searchFilter  , globalVariables],
 }
 </script>

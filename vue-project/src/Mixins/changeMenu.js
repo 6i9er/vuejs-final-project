@@ -5,7 +5,8 @@ export default {
     },
     methods: {
         changeMenu: function () {
-            if(this.$session.has('member_id')){
+            if(localStorage.member_id){
+
                 document.getElementById('app-login').style.display = 'none';
                 document.getElementById('app-signup').style.display = 'none';
                 document.getElementById('app-myBlogs').style.display = 'block';
@@ -17,8 +18,8 @@ export default {
                 document.getElementById('app-myBlogs').style.display = 'none';
                 document.getElementById('app-setting').style.display = 'none';
                 document.getElementById('app-logout').style.display = 'none';
-                console.log("notlogin")
             }
+
         }
     }
 }

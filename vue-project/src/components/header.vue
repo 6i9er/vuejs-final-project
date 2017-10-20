@@ -43,7 +43,7 @@ export default{
     methods : {
     },
     created () {
-        if(this.$session.has('member_id')){
+        if(localStorage.member_id){
             this.logedin = true;
         }else{
             this.logedin = false;

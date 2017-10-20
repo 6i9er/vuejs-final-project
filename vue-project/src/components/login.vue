@@ -25,7 +25,9 @@
 <script>
     import changeMenu from '../Mixins/changeMenu';
     import validation from '../Mixins/validation';
-export default{
+    import globalVariables from '../Mixins/globalVariables';
+
+    export default{
     components : {
     },
     data:function() {
@@ -37,6 +39,7 @@ export default{
             canLogin : false,
             validEmail : false,
             validPassword : false,
+            publicPath : '',
         }
     },
     methods : {
@@ -70,7 +73,7 @@ export default{
         login : function () {
             if(this.canLogin == true){
 
-                this.$http.post('http://localhost/restApi/public/api/members/login',{
+                this.$http.post(this.publicPath  + '/members/login',{
                     email:this.newUser.email,
                     password:this.newUser.password,
                 }).then(function(response){
@@ -92,13 +95,13 @@ export default{
         },
     },
     created () {
+        //Set the public URL Path
+        this.publicPath = this.getPublicPath();
+        //Check if user login t will redirect to home page
         if(localStorage.member_id){
             this.$router.push('/');
         }
-//       if(this.$session.has('member_id')){
-//            this.$router.push('/');
-//       }
     },
-    mixins : [changeMenu , validation],
+    mixins : [changeMenu , validation , globalVariables ],
 }
 </script>

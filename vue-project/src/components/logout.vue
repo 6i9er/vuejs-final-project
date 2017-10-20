@@ -8,12 +8,11 @@
 export default{
 
     created () {
-
-       if(this.$session.has('member_id')){
-           this.$session.remove('member_id')
-           this.changeMenu();
+        if(localStorage.member_id){
+            localStorage.removeItem('member_id');
+            this.changeMenu();
             this.$router.push('/login');
-       }
+        }
     },
     mixins : [changeMenu],
 }

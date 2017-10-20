@@ -33,6 +33,8 @@
 </template>
 
 <script>
+    import changeMenu from '../Mixins/changeMenu';
+    import globalVariables from "../Mixins/globalVariables";
 
 export default{
     components : {
@@ -44,6 +46,8 @@ export default{
             categories : [],
             foundData : false,
             errorData : 'no data found',
+            publicPath : '',
+
         }
     },
     methods : {
@@ -53,7 +57,9 @@ export default{
     },
     created () {
         var post = this.$router.currentRoute.params.id;
-        this.$http.get('http://localhost:8000/api/articles/' + post , {
+        this.publicPath = this.getPublicPath();
+
+        this.$http.get(this.publicPath + '/articles/' + post , {
         }).then(function (response){
             if(response['body']['status'] == 200){
                 this.blog = response['body']['data']['article']
@@ -66,6 +72,7 @@ export default{
                 this.categories = [];
             }
         })
-    }
+    },
+    mixins : [globalVariables]
 }
 </script>
