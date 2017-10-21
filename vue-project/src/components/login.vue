@@ -1,5 +1,6 @@
 <template>
     <div class="container" id="">
+        <app-loader v-if="showLoader"></app-loader>
         <div class="row">
             <h1 class="page-header">
                 Login
@@ -26,9 +27,11 @@
     import changeMenu from '../Mixins/changeMenu';
     import validation from '../Mixins/validation';
     import globalVariables from '../Mixins/globalVariables';
+    import loader from '../components/Templates/loader.vue';
 
     export default{
     components : {
+        'app-loader' : loader,
     },
     data:function() {
         return {
@@ -71,23 +74,20 @@
             }
         },
         login : function () {
+            this.showLoaderArea();
             if(this.canLogin == true){
-
                 this.$http.post(this.publicPath  + '/members/login',{
                     email:this.newUser.email,
                     password:this.newUser.password,
                 }).then(function(response){
                     if(response['body']['status'] == '200'){
-
-                        this.$session.start()
                         localStorage.setItem("member_id", response['body']['data']['id']);
-//                        this.$session.set('member_id', response['body']['data']['id'])
-//                        this.resetData(["loginEmail" , "loginPassword"] , 'loginErrorMessage' , true);
                         this.changeMenu();
-                                            this.$router.push('/');
+                        this.$router.push('/');
                     }else{
                         this.hasError(["loginEmail" , "loginPassword"] , 'loginErrorMessage' , true , response['body']['data']);
                     }
+                    this.hideLoaderArea();
                 }).catch( function(error) {
                     console.log(error);
                 } );

@@ -1,12 +1,11 @@
 <template>
     <div class="container">
-
+        <app-loader v-if="showLoader"></app-loader>
         <div class="container">
             <div class="row">
-                    <div class="form-group">
-                        <input type="text" class="form-control" v-model="search" placeholder="Search for articles here">
-                    </div>
-
+                <div class="form-group">
+                    <input type="text" class="form-control" v-model="search" placeholder="Search for articles here">
+                </div>
             </div>
             <div class="row" v-if="foundData">
                 <!-- Example row of columns -->
@@ -15,7 +14,6 @@
                         <h2>{{ article.title }} ( {{ article.id  }} )</h2>
                         <p> {{ article.content | snipets }} </p>
                         <button  class="btn btn-default" v-on:click="viewArticle( article.id )"> View details </button><hr>
-
                     </div>
                 <!-- End Example row of columns -->
             </div>
@@ -33,9 +31,12 @@
 
     import searchFilter from '../Mixins/search';
     import globalVariables from "../Mixins/globalVariables";
+    import loader from '../components/Templates/loader.vue';
 
-export default{
+
+    export default{
     components : {
+        'app-loader' : loader,
 
     },
     data:function() {
@@ -52,16 +53,10 @@ export default{
         viewArticle : function (id) {
             this.$router.push('/show/'+id)
         },
-        getNewData : function (page ) {
-            var newPage = page-1;
-            this.$http.get('http://localhost:8000/api/get-articles?count='+this.count+'&start='+newPage, {
-            }).then(function (response){
-                this.totalPages = response['body']['data']['totalPages'];
-                this.articles = response['body']['data']['articles'];
-            })
-        }
+
     },
     created () {
+        this.showLoaderArea();
         var search = this.$router.currentRoute.params.id;
         this.publicPath = this.getPublicPath();
 
@@ -74,6 +69,7 @@ export default{
                 this.foundData = false;
                 this.errorData = response['body']['data'];
             }
+            this.hideLoaderArea()
         })
     },
     filters : {

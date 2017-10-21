@@ -1,5 +1,6 @@
 <template>
     <div class="container" >
+        <app-loader v-if="showLoader"></app-loader>
         <div class="row">
             <h1 class="page-header">
                 Add New Article
@@ -22,7 +23,7 @@
 
                         <div class="checkbox">
                             <label>
-                                <input  type="checkbox" v-model="myCategories" v-on:click="pushCategoryId(category.id ,category.name)" v-bind:value="category.name" v-bind:id=" category.id "> {{ category.name }}
+                                <input   type="checkbox" v-model="myCategories" v-on:click="pushCategoryId(category.id ,category.name)" v-bind:value="category.name" v-bind:id=" category.id " > {{ category.name }}
                             </label>
                         </div>
                     </li>
@@ -53,7 +54,7 @@
             <!-- buttons-->
             <div slot="buttons">
                 <button type="button" class="btn btn-outline-info" @click="closeModal()"> Close </button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal" @click="createPost()">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" @click="updatePost ()">
                     Submit
                 </button>
             </div>
@@ -67,10 +68,13 @@
 import globalVariables from "../Mixins/globalVariables";
 import validations from "../Mixins/validation";
 import modal from "../Modals/modal.vue";
+import loader from '../components/Templates/loader.vue';
+
 
 export default{
     components : {
         'create-modal' : modal,
+        'app-loader' : loader,
     },
     data:function() {
         return {
@@ -83,10 +87,10 @@ export default{
                 content : '',
                 author : '',
             },
-            canCreate : false,
-            validTitle : false,
-            validContent : false,
-            validCategories : false,
+            canCreate : true,
+            validTitle : true,
+            validContent : true,
+            validCategories : true,
             showModal: false,
 
         }
@@ -143,34 +147,27 @@ export default{
         },
 
         // Create Topic
-        createPost : function () {
+        updatePost : function () {
+            var article = this.$router.currentRoute.params.id;
             if(this.canCreate == true){
-
-                this.$http.post(this.publicPath  + '/articles',{
+                this.showLoaderArea();
+                this.$http.post(this.publicPath  + '/articles/' + article,{
                     categories:this.myCategoriesIds,
                     title:this.blog.title,
                     content:this.blog.content,
                     member_id:localStorage.member_id,
-                    author:this.blog.author
+                    author:this.blog.author,
+                    _method : 'PUT',
                 }).then(function(response){
-                    console.log(response);
                     if(response['body']['status'] == '200'){
                             var element = document.getElementById('createSinglePageErrorMessage');
                             element.className = 'alert alert-success';
                             element.innerHTML = response['body']['data'];
-                            this.blog.title = '';
-                            this.blog.content = '';
-                            this.myCategories = [];
-                            this.myCategoriesIds = [];
-                            this.canCreate = false;
-                            this.validTitle = false;
-                            this.validContent = false;
-                            this.validCategories = false;
                             this.showModal = false;
-
                     }else{
                         this.hasError(["loginEmail" , "loginPassword"] , 'createSinglePageErrorMessage' , true , response['body']['data']);
                     }
+                    this.hideLoaderArea();
                 }).catch( function(error) {
                     console.log(error);
                 } );
@@ -179,20 +176,22 @@ export default{
 
     },
     created () {
-
+        this.showLoaderArea();
+        var article = this.$router.currentRoute.params.id;
         this.publicPath = this.getPublicPath();
         if(!localStorage.member_id ){
             this.$router.push('/login')
         }else{
-            this.$http.get(this.publicPath + '/get-create?id='+localStorage.member_id, {
-
+            this.$http.get(this.publicPath + '/articles/'+article+'/edit', {
             }).then(function (response){
                 if(response['body']['status'] == 200){
                     this.categories = response['body']['data']['categories'];
-                    this.blog.author = response['body']['data']['member']['name'];
+                    this.myCategoriesIds = response['body']['data']['categoriesIds'];
+                    this.myCategories = response['body']['data']['categoriesNames'];
+                    this.blog = response['body']['data']['article'];
                 }
+                this.hideLoaderArea();
             })
-
         }
     },
     mounted: function () {

@@ -1,5 +1,6 @@
 <template>
     <div class="container">
+        <app-loader v-if="showLoader"></app-loader>
         <!-- Example row of columns -->
         <div class="row" v-if="foundData">
             <div class="col-md-12">
@@ -35,9 +36,11 @@
 <script>
     import changeMenu from '../Mixins/changeMenu';
     import globalVariables from "../Mixins/globalVariables";
+    import loader from '../components/Templates/loader.vue';
 
 export default{
     components : {
+        'app-loader' : loader,
 
     },
     data:function() {
@@ -58,7 +61,7 @@ export default{
     created () {
         var post = this.$router.currentRoute.params.id;
         this.publicPath = this.getPublicPath();
-
+        this.showLoaderArea()
         this.$http.get(this.publicPath + '/articles/' + post , {
         }).then(function (response){
             if(response['body']['status'] == 200){
@@ -71,6 +74,7 @@ export default{
                 this.blog = []
                 this.categories = [];
             }
+            this.hideLoaderArea()
         })
     },
     mixins : [globalVariables]

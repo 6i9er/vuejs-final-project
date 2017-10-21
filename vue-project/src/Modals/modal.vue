@@ -1,18 +1,24 @@
 <template>
-    <transition name="modal">
-        <div class="modal" style="display: block">
+    <transition name="modal" >
+        <div class="modal modal-mask" id="a7a" style="display: block;">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">
-                            Modal title
+                        <h4  class="modal-title">
+                            confirm this Post
                         </h4>
                     </div>
 
                     <div class="modal-body">
+                        <slot name="title"></slot>
+                        <slot name="content"></slot>
+                        <slot name="author"></slot>
+                        <slot name="categories"></slot>
                     </div>
 
                     <div class="modal-footer">
+                        <slot name="buttons"></slot>
+
                     </div>
                 </div>
             </div>
@@ -31,15 +37,12 @@ export default{
     props: ['show'],
     data:function() {
         return {
-            title: '',
-            body: ''
+
         }
     },
     methods : {
         close: function () {
-            this.$emit('close');
-            this.title = '';
-            this.body = '';
+            this.$modal.hide('modal');
         },
     },
     created () {
@@ -62,6 +65,17 @@ export default{
     .modal-leave-active .modal-container {
         -webkit-transform: scale(1.1);
         transform: scale(1.1);
+    }
+    .modal-mask {
+        position: fixed;
+        z-index: 9998;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, .5);
+        display: table;
+        transition: opacity .3s ease;
     }
 </style>
 

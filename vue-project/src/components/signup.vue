@@ -1,5 +1,6 @@
 <template>
     <div class="container">
+        <app-loader v-if="showLoader"></app-loader>
         <div class="row">
             <h1 class="page-header">
                 Signup
@@ -35,10 +36,12 @@
     import changeMenu from '../Mixins/changeMenu';
     import validation from '../Mixins/validation';
     import globalVariables from '../Mixins/globalVariables';
+    import loader from '../components/Templates/loader.vue';
+
 
     export default{
     components : {
-
+        'app-loader' : loader,
     },
     data:function() {
         return {
@@ -106,6 +109,7 @@
         },
         signup : function () {
             if(this.newUser.password == this.newUser.confirmPassword){
+                this.showLoaderArea()
                 this.resetData(["signupPassword" , "signupConfirmPassword"] , 'signupErrorMessage' , true );
 
                 this.$http.post(this.publicPath + '/members',{
@@ -131,6 +135,7 @@
                     }else{
                         this.hasError(["signupPassword" , "signupConfirmPassword" , "signupEmail" , "signupName"] , 'signupErrorMessage' , true , response['body']['data']);
                     }
+                    this.hideLoaderArea()
                 }).catch( function(error) {
                     console.log(error);
                 } );

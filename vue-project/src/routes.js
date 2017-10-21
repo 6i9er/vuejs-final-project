@@ -6,6 +6,8 @@ import signup from './components/signup.vue';
 import setting from './components/setting.vue';
 import singlePage from './components/singlePage.vue';
 import createSinglePage from './components/createSinglePage.vue';
+import editSinglePage from './components/editSinglePage.vue';
+import myArticles from './components/myArticles.vue';
 import PageNotFound from './components/404.vue';
 
 export default [
@@ -13,6 +15,7 @@ export default [
     // {path:'/' , redirect:'/0'},
     {path:'/login' , component : login},
     {path:'/logout' , component : logout},
+    {path:'/myblog' , component : myArticles},
     {path:'/signup' , component : signup},
     {path:'/setting' , component : setting},
     {path:'/show/:id' , component : singlePage},
@@ -21,5 +24,6 @@ export default [
     {path:'/search/' , redirect:'/search/0'},
     // {path:'/post-article' , component : createSinglePage},
     {path:'/post-article' , component : createSinglePage},
+    {path:'/edit-article/:id' , component : editSinglePage},
     { path: "*", component: PageNotFound }
 ]

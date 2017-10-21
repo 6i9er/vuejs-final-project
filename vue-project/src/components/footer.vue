@@ -1,21 +1,22 @@
 <template>
     <footer>
         <div class="container">
-            <p>&copy; 2016 Company, Inc.</p>
+            <p>&copy; {{ date }} Company, Inc.</p>
         </div>
     </footer>
 </template>
+<script>
 
 export default{
     components : {
 
     },
     data:function() {
-    return {
-
-
-    }
+        return {
+            date: new Date().getFullYear(),
+        }
     },
     methods : {
     }
 }
+</script>

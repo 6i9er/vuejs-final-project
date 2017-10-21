@@ -1,5 +1,6 @@
 <template>
     <div class="container">
+        <app-loader v-if="showLoader"></app-loader>
         <div class="row">
             <h1 class="page-header">
                 User Setting
@@ -40,9 +41,13 @@
 <script>
     import changeMenu from '../Mixins/changeMenu';
     import validation from '../Mixins/validation';
-export default{
-    components : {
+    import globalVariables from '../Mixins/globalVariables';
+    import loader from '../components/Templates/loader.vue';
 
+
+    export default{
+    components : {
+        'app-loader' : loader,
     },
     data:function() {
         return {
@@ -58,7 +63,9 @@ export default{
             validPassword : false,
             validConfirmPassword : false,
             validName : false,
-            }
+            publicPath : '',
+
+        }
     },
     methods : {
         validateEmail : function() {
@@ -92,7 +99,8 @@ export default{
             }
         },
         update : function () {
-                this.$http.post('http://127.0.0.1:8000/api/members/'+this.$session.get('member_id'),{
+            this.showLoaderArea()
+                this.$http.post(this.publicPath + '/members/'+ localStorage.member_id,{
                     email:this.user.email,
                     password:this.user.password,
                     name:this.user.name,
@@ -122,22 +130,25 @@ export default{
                     }else{
                         this.hasError([] , 'settingErrorMessage' , true , response['body']['data']);
                     }
+                    this.hideLoaderArea()
                 }).catch( function(error) {
                     console.log(error);
                 } );
 
         }
     },
-    mixins : [changeMenu , validation],
+    mixins : [changeMenu , validation ,  globalVariables],
     created () {
-        if(!this.$session.has('member_id')){
+        this.publicPath = this.getPublicPath();
+        if(!localStorage.member_id){
             this.$router.push('/login');
         }else{
-            this.$http.get('http://localhost:8000/members/'+this.$session.get('member_id') , {
+            this.showLoaderArea()
+            this.$http.get(this.publicPath + '/members/' + localStorage.member_id , {
 
             }).then(function (response) {
                 this.user = response['body'];
-                console.log(response['body']);
+                this.hideLoaderArea()
             })
         }
     }

@@ -1,19 +1,16 @@
 <template>
     <transition name="modal" >
-        <div class="modal modal-mask" id="a7a" style="display: block;">
+        <div class="modal modal-mask"  style="display: block;">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4  class="modal-title">
-                            confirm this Post
+                            Delete Confirmation
                         </h4>
                     </div>
 
                     <div class="modal-body">
-                        <slot name="title"></slot>
-                        <slot name="content"></slot>
-                        <slot name="author"></slot>
-                        <slot name="categories"></slot>
+                            are you sure you want to delete this article ??
                     </div>
 
                     <div class="modal-footer">

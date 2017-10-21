@@ -47,11 +47,9 @@ export default{
             this.logedin = true;
         }else{
             this.logedin = false;
-
         }
     },
 }
-
 </script>
 
 <style scoped="">
