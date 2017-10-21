@@ -2,7 +2,7 @@
 export default {
     data: function () {
       return {
-          publicPath : 'http://localhost/restApi/public/api',
+          publicPath : 'http://localhost/vuejs-final-project/webService/public/api',
           showLoader:false,
       }
     },
@@ -10,7 +10,7 @@ export default {
     },
     methods: {
         getPublicPath : function () {
-            return 'http://localhost/restApi/public/api';
+            return 'http://localhost/vuejs-final-project/webService/public/api';
         },showLoaderArea(){
             this.showLoader = true;
         },
