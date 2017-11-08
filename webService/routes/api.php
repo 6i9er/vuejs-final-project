@@ -22,6 +22,7 @@ Route::get('get-articles', 'ArticleController@getArticles');
 Route::get('get-create', 'ArticleController@createpost');
 Route::get('get-articles-by-search', 'ArticleController@getArticlesForSearch');
 Route::get('get-articles-for-user', 'ArticleController@getArticlesForUser');
+Route::post('mina', 'ArticlesController@mina');
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });

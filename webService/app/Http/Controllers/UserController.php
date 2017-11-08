@@ -8,7 +8,7 @@ use App\Models\Member;
 use App\User;
 use App\Models\Article;
 use App\Traits\ArrayTraits;
-class ArticleController extends Controller
+class UserController extends Controller
 {
     use ArrayTraits;
 

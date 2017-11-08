@@ -176,6 +176,7 @@ export default{
                     }else{
                         this.hasError(["loginEmail" , "loginPassword"] , 'createSinglePageErrorMessage' , true , response['body']['data']);
                     }
+                    console.log(response)
                     this.hideLoaderArea();
                 }).catch( function(error) {
                     console.log(error);

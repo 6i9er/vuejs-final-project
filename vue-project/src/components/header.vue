@@ -18,6 +18,7 @@
                     <li v-show="!logedin" id="app-signup"><router-link to="/signup" exact=""> signup</router-link></li>
                     <li  id="app-newArticle"><router-link to="/post-article" exact=""> add new Article</router-link></li>
                     <li v-show="logedin" id="app-myBlogs" ><router-link to="/myblog" exact=""> myBlogs</router-link></li>
+                    <li v-show="logedin" id="app-upload" ><router-link to="/upload-picture" exact=""> upload picture</router-link></li>
                     <li v-show="logedin" id="app-setting" ><router-link to="/setting" exact=""> setting</router-link></li>
                     <li v-show="logedin" id="app-logout"  ><router-link to="/logout" exact=""> logout</router-link></li>
                 </ul>

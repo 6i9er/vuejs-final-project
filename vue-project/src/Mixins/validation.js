@@ -40,11 +40,13 @@ export default {
         },
         removeErrorClass : function (id ) {
             var tagName = document.getElementById(id);
-            tagName.setAttribute("style" , '')
+            console.log("AAAAAA")
+            // tagName.setAttribute("style" , '')
         },
         setErrorClass : function (id ) {
             var tagName = document.getElementById(id);
-            tagName.setAttribute("style" , 'border:1px solid red;background:pink;')
+            console.log(id)
+            // tagName.setAttribute("style" , 'border:1px solid red;background:pink;')
         },
     },
 }

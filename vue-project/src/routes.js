@@ -9,6 +9,7 @@ import createSinglePage from './components/createSinglePage.vue';
 import editSinglePage from './components/editSinglePage.vue';
 import myArticles from './components/myArticles.vue';
 import PageNotFound from './components/404.vue';
+import uploadPicture from './components/uploadPicture.vue';
 
 export default [
     {path:'/' , component : articles},
@@ -25,5 +26,6 @@ export default [
     // {path:'/post-article' , component : createSinglePage},
     {path:'/post-article' , component : createSinglePage},
     {path:'/edit-article/:id' , component : editSinglePage},
+    {path:'/upload-picture' , component : uploadPicture},
     { path: "*", component: PageNotFound }
 ]

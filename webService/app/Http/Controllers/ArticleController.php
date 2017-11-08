@@ -55,6 +55,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 
 
     public function createpost(Request $request){
+
+
         $id = ($request->id) ? $request->id : 0;
         $member = User::find($id);
         $categories = Category::select("name" , "id")->get();
@@ -70,6 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
      */
     public function create()
     {
+//        return "aaAA";
         return Auth::user();
         return $id;
         $member = User::find($id);
@@ -89,8 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     public function store(Request $request)
     {
 
-//        return $request;
-// return "AAAAA";
+;
         $arrayRequest = $request->toArray();
         $finalRequest = $this->removeElementFromArray($arrayRequest,array("categories"));
 //         return count($arrayRequest['categories']);
@@ -177,6 +179,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
      */
     public function update(Request $request, $id)
     {
+//        return "aaaaaaAA";
         $user = Article::find($id);
         if(!$user){
             return  $this->jsonReturn( "no Articles found with this data", '1' );
@@ -251,6 +254,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
             return  $this->jsonReturn( $articles, '200' );
         }
         return  $this->jsonReturn( "no data found", '404' );
+    }
+
+
+    public function mina(Request $request)
+    {
+        return "A";
+        $photos = $request->file('image');
+        return $photos[0]->getClientOriginalName();
     }
 
 

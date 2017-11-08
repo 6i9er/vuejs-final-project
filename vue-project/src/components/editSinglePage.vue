@@ -3,7 +3,7 @@
         <app-loader v-if="showLoader"></app-loader>
         <div class="row">
             <h1 class="page-header">
-                Add New Article
+                Edit Article
             </h1>
             <form>
                 <div class="form-group">
@@ -29,7 +29,7 @@
                     </li>
                 </ol>
                 <div  id="createSinglePageErrorMessage"></div>
-                <button type="button" class="form-control" v-show="canCreate" v-on:click="openModal()" >Add Post </button>
+                <button type="button" class="form-control" v-show="canCreate" v-on:click="openModal()" >Update Post </button>
             </form>
         </div>
 
